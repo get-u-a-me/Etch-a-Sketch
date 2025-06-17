@@ -1,5 +1,12 @@
 const container = document.querySelector('.container');
 const button = document.querySelector("#sizebtn")
+const input = document.querySelector('.opacity')
+let mouseDown = false;
+
+document.addEventListener('dragstart', (e) => {
+    e.preventDefault();
+})
+
 createGrid(18, 18)
 
 
@@ -16,18 +23,20 @@ function createGrid(rows, cols) {
         square.style.backgroundColor = 'white';
         square.style.opacity = 0.1;
 
-        square.addEventListener("mouseover", () => {
-            if(square.style.backgroundColor == 'white'){
-            square.style.backgroundColor = setRandomColor();
+        square.addEventListener("mouseover", (e) => {
+            if (mouseDown === true) {
+                if (square.style.backgroundColor == 'white') {
+                    square.style.backgroundColor = setRandomColor();
+                }
+                square.style.opacity = input.value;
             }
-            square.style.opacity = parseFloat(square.style.opacity)+0.2;
         })
     }
 }
 
-function setRandomColor(){
+function setRandomColor() {
     let random = Math.floor(Math.random() * 7);
-    switch(random){
+    switch (random) {
         case 0:
             return "black";
         case 1:
@@ -46,15 +55,22 @@ function setRandomColor(){
 }
 
 button.addEventListener("click", () => {
-
     let size = 0;
-    while (size == 0 || size > 100) {
-        size = prompt("Field size up to 100:")
+    while (size == 0 || size > 64) {
+        size = prompt("Field size up to 64:")
     }
-
     removeField();
     createGrid(size, size);
 })
+
+container.addEventListener("mousedown", () => {
+    mouseDown = true;
+})
+
+container.addEventListener("mouseup", () => {
+    mouseDown = false;
+})
+
 
 function removeField() {
 
